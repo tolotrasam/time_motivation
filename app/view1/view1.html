@@ -1,0 +1,56 @@
+<div id="main_container">
+
+    <div class="gridListdemoDynamicTiles">
+        <md-grid-list
+                md-cols="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="6"
+                md-row-height-gt-md="1:1" md-row-height="4:3"
+                md-gutter="8px" md-gutter-gt-sm="4px">
+
+            <md-grid-tile ng-repeat="event in data.content track by $index"
+                          md-rowspan="{{event.span.row}}"
+                          md-colspan="{{event.span.col}}"
+                          md-colspan-sm="1"
+                          md-colspan-xs="1"
+                          class="tile_container"
+                          ng-class="event.background">
+                <div class="countdown">
+                    <b><span>{{event.countdown}}</span></b></div>
+                <br>
+                <div class="progress_bar">
+                    <md-progress-linear md-mode="determinate" value="{{event.percentage}}"></md-progress-linear>
+                </div>
+
+
+                <div class="editor">
+                        <span ng-if="event.editMode" contenteditable data-directive
+                              ng-model="event.title">{{event.title}}</span>
+                        <md-icon ng-if="event.editMode" ng-click="event.editMode = false; save_all($index)"
+                                 md-font-set="material-icons"> done
+                        </md-icon>
+                </div>
+                <div>
+                        <md-icon class="remove_icon" ng-click="event.editMode = false; delete_index($index)" md-font-set="material-icons">
+                            close
+                        </md-icon>
+                    </div>
+                <md-grid-tile-footer><h3>{{event.title}}</h3> <div class="event_icons">
+                    <md-icon class="trigger_edit_icon" ng-if="!event.editMode" ng-click="event.editMode = true" md-font-set="material-icons">
+                        mode_edit
+                    </md-icon>
+                </div></md-grid-tile-footer>
+            </md-grid-tile>
+        </md-grid-list>
+    </div>
+
+
+    <br>
+    <br>
+    <form ng-submit="save_new()">
+        <h1 ng-model="data.new.title" contenteditable data-directive id="dob">Title</h1>
+        <br>
+        <input min="{{myFunction.getToday()}}" ng-model="data.new.time" value="2013-10-24T20:36:00" step="1"
+               type="datetime-local">
+        <button type="submit">Motivate</button>
+    </form>
+    <button ng-click="debug()" type="button">Debug</button>
+</div>
