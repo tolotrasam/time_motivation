@@ -9,6 +9,6 @@
     "html5-boilerplate": "^5.3.0",
     "angular-animate": "^1.6.4",
     "angular-material": "^1.1.4",
-    "angular": "angularjs#^1.6.4"
+    "smDateTimeRangePicker": "^2.0.10"
   }
 }

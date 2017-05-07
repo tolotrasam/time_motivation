@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute', 'timer', 'ngMaterial'])
+angular.module('myApp.view1', ['ngRoute', 'timer', 'ngMaterial',"smDateTimeRangePicker"])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/view1', {
@@ -11,9 +11,9 @@ angular.module('myApp.view1', ['ngRoute', 'timer', 'ngMaterial'])
     .config(function ($mdThemingProvider) {
         // Update the theme colors to use themes on font-icons
         $mdThemingProvider.theme('default')
-            .primaryPalette("red")
+            .primaryPalette("green")
             .accentPalette('green')
-            .warnPalette('blue');
+            .warnPalette('green');
     })
     .config(function ($mdIconProvider) {
         $mdIconProvider.iconSet("avatar", '../flavicon.png', 128);
@@ -150,14 +150,15 @@ angular.module('myApp.view1', ['ngRoute', 'timer', 'ngMaterial'])
             window.localStorage['timer_motivation'] = angular.toJson($scope.data.content);
             console.log('saved overwritten')
         }
+        $scope.saveAndUpdateChanges = function (event) {
+           event.date_millis = (new Date(event.time)).getTime()
+        }
         $scope.save_new = function () {
             if (!$scope.data.content) {
                 $scope.data.content = []
             }
             $scope.data.new.date_millis = (new Date($scope.data.new.time)).getTime();
-            if (!$scope.data.new.title) {
-                $scope.data.new.title = 'No title'
-            }
+
             if ($scope.data.new.date_millis < (new Date()).getTime()) { //do not allow past event
                 $scope.errors.push({label: 'date', message: 'do not allow past event'})
                 // return
@@ -169,7 +170,7 @@ angular.module('myApp.view1', ['ngRoute', 'timer', 'ngMaterial'])
                 $scope.countdown();
             }
             $scope.init_tiles();
-            console.log($scope.data, 'scope data')
+            //console.log($scope.data, 'scope data')
         };
 
 
@@ -181,8 +182,10 @@ angular.module('myApp.view1', ['ngRoute', 'timer', 'ngMaterial'])
                         event_tile = [];
                         $scope.data.content.push(event_tile)
                     }
-                    console.log(j)
                     event_tile.span = {row: 1, col: 1};
+                    if (!event_tile.title) {
+                        event_tile.title = 'No title'
+                    }
 
                     switch (j + 1) {
                         case 1:
@@ -268,8 +271,29 @@ angular.module('myApp.view1', ['ngRoute', 'timer', 'ngMaterial'])
             return (new Date()).getTime()
         };
         $scope.myFunctions.getToday = function () {
-            return (new Date())
+            var now = new Date();
+            return now;
         };
+        $scope.myFunctions.getDateFormattedString = function (date) {
+            var date = new Date(date)
+            var dd = date.getDate()+1;
+            var mm = date.getMonth()+1; //January is 0!
+            var yyyy = date.getFullYear();
+
+            if(dd<10) {
+                dd='0'+dd
+            }
+
+            if(mm<10) {
+                mm='0'+mm
+            }
+
+            date = mm+'-'+dd+'-'+yyyy;
+            //console.log(date,'date')
+            return date;
+        }
+        $scope.today = $scope.myFunctions.getDateFormattedString(new Date());
+
         $scope.init();
 
 

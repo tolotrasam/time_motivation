@@ -6,12 +6,13 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>My AngularJS App</title>
+  <title>Timer Motivation</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/gif" href="flavicon.png" />
   <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+  <link rel="stylesheet" href="bower_components/smDateTimeRangePicker/src/picker.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
@@ -27,7 +28,7 @@
 
   <div ng-view></div>
 
-  <div>TolotraNet Copyright 2017: v<span app-version></span></div>
+  <div id="copyright">TolotraNet Copyright 2017: v<span app-version></span></div>
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
@@ -40,6 +41,8 @@
   <script src="bower_components/angular-animate/angular-animate.js"></script>
   <script src="bower_components/angular-messages/angular-messages.js"></script>
   <script src="bower_components/angular-aria/angular-aria.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/smDateTimeRangePicker/src/picker.js"></script>
 
 
   <script src="app.js"></script>

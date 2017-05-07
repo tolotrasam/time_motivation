@@ -7,6 +7,7 @@
                 md-gutter="8px" md-gutter-gt-sm="4px">
 
             <md-grid-tile ng-repeat="event in data.content track by $index"
+                          ng-mouseenter="event.showIcons=true" ng-mouseleave="event.showIcons=false"
                           md-rowspan="{{event.span.row}}"
                           md-colspan="{{event.span.col}}"
                           md-colspan-sm="1"
@@ -14,7 +15,34 @@
                           class="tile_container"
                           ng-class="event.background">
                 <div class="countdown">
-                    <b><span>{{event.countdown}}</span></b></div>
+                    <b><span ng-show="!event.editModeTime">{{event.countdown}}<md-icon ng-show="event.showIcons" ng-init="event.editModeTime = false" ng-if="true"
+                                                         ng-click="event.editModeTime = true; "
+                                                         md-font-set="material-icons"> timelapse
+                    </md-icon></span></b>
+                    <div ng-if="event.editModeTime">
+                        <sm-date-time-picker
+                                on-focus
+                                placeholder="Pick A date"
+                                class="date_picker"
+                                min-date="{{today}}"
+                                fname="field"
+                                label="Pick a date"
+                                form="empForm"
+                                ng-model="event.time"
+
+                                is-required="{{true}}"
+                                format="MM-DD-YYYY HH:mm"
+                                mode="date-time"
+                                week-start-day="Monday"
+                        ></sm-date-time-picker>
+                        <md-button class="md-button md-raised "  ng-click="event.editModeTime = false;saveAndUpdateChanges(event); save_all($index)"
+                                 md-font-set="material-icons"> Save changes
+                        </md-button>
+                        <md-button class="md-button md-raised "  ng-click="event.editModeTime = false;"
+                                 md-font-set="material-icons"> Cancel
+                        </md-button>
+                    </div>
+                </div>
                 <br>
                 <div class="progress_bar">
                     <md-progress-linear md-mode="determinate" value="{{event.percentage}}"></md-progress-linear>
@@ -24,20 +52,94 @@
                 <div class="editor">
                         <span ng-if="event.editMode" contenteditable data-directive
                               ng-model="event.title">{{event.title}}</span>
-                        <md-icon ng-if="event.editMode" ng-click="event.editMode = false; save_all($index)"
-                                 md-font-set="material-icons"> done
-                        </md-icon>
+                    <md-icon ng-if="event.editMode" ng-click="event.editMode = false; save_all($index)"
+                             md-font-set="material-icons"> done
+                    </md-icon>
                 </div>
-                <div>
-                        <md-icon class="remove_icon" ng-click="event.editMode = false; delete_index($index)" md-font-set="material-icons">
+                <div class="close_icon">
+                    <md-icon ng-show="event.showIcons" class="remove_icon" ng-click="event.editMode = false; delete_index($index)"
+                             md-font-set="material-icons">
+                        close
+                    </md-icon>
+                </div>
+                <md-grid-tile-footer><h3 ng-blur = "save_all($index)" contenteditable data-directive
+                                         ng-model="event.title">{{event.title}}</h3>
+                    <div class="event_icons">
+                        <md-icon class="trigger_edit_icon" ng-if="event.editMode" ng-click="event.editMode = true"
+                                 md-font-set="material-icons">
+                            mode_edit
+                        </md-icon>
+                    </div>
+                </md-grid-tile-footer>
+            </md-grid-tile>
+
+
+            <!--ADD NEW EDITOR-->
+            <md-grid-tile id="add_new_editor"
+                    md-rowspan="1"
+                    md-colspan="1"
+                    md-colspan-sm="1"
+                    md-colspan-xs="1"
+                    class="tile_container"
+                    ng-class="blue"   ng-init="addMode= false" >
+
+                <div class="add_new">
+                    <form class="form_add_new" ng-submit="save_new(); addMode = false">
+                        <md-input-container class="title_new_container">
+                            <label class="title_new">Title</label>
+                            <input class="title_new" ng-model="data.new.title">
+                        </md-input-container>
+                        <div>
+                            <sm-date-time-picker
+                                    on-focus
+                                    ng-focus="addMode= true"
+                                    placeholder="Pick A date"
+                                    class="date_picker"
+                                    min-date="{{today}}"
+                                    fname="field"
+                                    label="Pick a date"
+                                    form="empForm"
+                                    ng-model="data.new.time"
+
+                                    is-required="{{true}}"
+                                    format="MM-DD-YYYY HH:mm"
+                                    mode="date-time"
+                                    week-start-day="Monday"
+                            ></sm-date-time-picker>
+                        </div>
+                        <!---->
+                        <!--<input min="{{myFunction.getToday()}}" ng-model="data.new.time" value="2013-10-24T20:36:00" step="1"-->
+                        <!--type="datetime-local">-->
+                        <md-button type="submit" class="md-warn md-raised md-hue-2">Motivate</md-button>
+
+                    </form>
+                    <div class="close_icon">
+                        <md-icon  class="remove_icon" ng-click="addMode = false; "
+                                 md-font-set="material-icons">
                             close
                         </md-icon>
                     </div>
-                <md-grid-tile-footer><h3>{{event.title}}</h3> <div class="event_icons">
-                    <md-icon class="trigger_edit_icon" ng-if="!event.editMode" ng-click="event.editMode = true" md-font-set="material-icons">
-                        mode_edit
+
+                </div>
+
+
+            <div class="add_icon_container" ng-show="!addMode" >
+                <div class="add_icon" >
+                    <md-icon ng-click="addMode=true"
+                             md-font-set="material-icons md-48">
+                        add_circle_outline
                     </md-icon>
-                </div></md-grid-tile-footer>
+                </div>
+            </div>
+                <div class="editor">
+                    <span ng-if="event.editMode">{{event.title}}</span>
+                    <md-icon ng-if="event.editMode" ng-click="event.editMode = false; save_all($index)"
+                             md-font-set="material-icons"> done
+                    </md-icon>
+                </div>
+                <md-grid-tile-footer><h3>Add New Goal</h3>
+
+                </md-grid-tile-footer>
             </md-grid-tile>
         </md-grid-list>
     </div>
@@ -45,12 +147,6 @@
 
     <br>
     <br>
-    <form ng-submit="save_new()">
-        <h1 ng-model="data.new.title" contenteditable data-directive id="dob">Title</h1>
-        <br>
-        <input min="{{myFunction.getToday()}}" ng-model="data.new.time" value="2013-10-24T20:36:00" step="1"
-               type="datetime-local">
-        <button type="submit">Motivate</button>
-    </form>
-    <button ng-click="debug()" type="button">Debug</button>
+
+    <!--<button ng-click="debug()" type="button">Debug</button>-->
 </div>
